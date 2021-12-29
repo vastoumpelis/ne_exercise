@@ -1,0 +1,5 @@
+{
+  "tmdb_api_key": "8f188125550184ae0cc714cc3f150a5b",
+  "tmdb__base_url": "https://api.themoviedb.org/3",
+  "poster_base_url": "https://image.tmdb.org/t/p/original"
+}
