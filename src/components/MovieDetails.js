@@ -1,20 +1,15 @@
 import React from 'react'
+import { Modal } from 'react-bootstrap'
 
 const MovieDetails = (props) => {
   return (
-    <div className="image-container d-inline justify-content-start m-3">
-      <img
-        src={props.movie.Poster}
-        alt="movie"
-        className="img-fluid img-thumbnail"
-      ></img>
-      <div className="overlay d-block align-items-center justify-content-center">
-        <div className="image-container-title">Title: {props.movie.Title}</div>
-        <div className="image-container-footer">
-          Year: {props.movie.Year} - Avg. Score: {props.movie.VoteAverage}
-        </div>
-      </div>
-    </div>
+    <>
+      <Modal show={props.showModal}>
+        <Modal.Header>{props.movie.Title}</Modal.Header>
+        <Modal.Body>{props.movie.Title}</Modal.Body>
+        <Modal.Footer></Modal.Footer>
+      </Modal>
+    </>
   )
 }
 

@@ -9,7 +9,11 @@ const MovieList = (props) => {
           className="movie-container d-inline justify-content-start m-3"
           key={movie.Id}
           id={movie.Id}
-          onClick={(event) => console.log(event.target)}
+          onClick={(event) =>
+            event.target.id
+              ? props.setMovieId(event.target.id)
+              : props.setMovieId(event.target.parentElement.id)
+          }
         >
           <img
             src={movie.Poster}

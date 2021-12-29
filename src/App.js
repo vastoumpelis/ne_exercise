@@ -6,14 +6,17 @@ import MovieList from './components/MovieList'
 import MovieListHeading from './components/MovieListHeading'
 import MovieSearch from './components/MovieSearch'
 import Header from './components/Header'
+import MovieDetails from './components/MovieDetails'
 
 const App = () => {
   // using useState to store the values of the below
   const [movies, setMovies] = useState([])
-  const [id, setId] = useState([])
+  const [movieId, setMovieId] = useState()
+  const [movie, setMovie] = useState([])
   const [searchValue, setSearchValue] = useState('')
   const [listValue, setListValue] = useState('now-playing')
   const [headingTitle, setHeadingTitle] = useState('Now Playing')
+  const [showModal, setShowModal] = useState(false)
 
   // get "Now Playing" movies function
   const getMovieList = async (listValue) => {
@@ -45,8 +48,6 @@ const App = () => {
           VoteAverage: result.vote_average
         }
       })
-
-      console.log({ resultMovies })
 
       // only keep the first half if the top-10 is clicked
       // this is because the tmdb API does not allow to limit movies returned
@@ -113,23 +114,19 @@ const App = () => {
     const responseJson = await response.json()
 
     // if there are any results and create custom create data model
-    if (responseJson.results) {
-      const nowPlayingMovies = responseJson.results.map((result) => {
-        return {
-          Id: result.id,
-          Overview: result.overview,
-          Poster: configData.poster_base_url + result.poster_path,
-          ReleaseDate: new Date(result.release_date),
-          Year: new Date(result.release_date).getFullYear(),
-          Title: result.title,
-          VoteAverage: result.vote_average
-        }
-      })
+    if (responseJson) {
+      const movieDetails = {
+        Id: responseJson.id,
+        Overview: responseJson.overview,
+        Poster: configData.poster_base_url + responseJson.poster_path,
+        ReleaseDate: new Date(responseJson.release_date),
+        Year: new Date(responseJson.release_date).getFullYear(),
+        Title: responseJson.title,
+        VoteAverage: responseJson.vote_average
+      }
 
-      console.log({ nowPlayingMovies })
-
-      // set the movies to the results
-      //setMovies(nowPlayingMovies)
+      // set the movie to the result
+      setMovie(movieDetails)
     }
   }
 
@@ -143,14 +140,28 @@ const App = () => {
     searchMovies(searchValue)
   }, [searchValue])
 
-  // runs every time the search input changes
+  // runs every time the movie list changes (on click)
   useEffect(() => {
     getMovieList(listValue)
   }, [listValue])
 
+  // runs every time the movie id changes (on click)
+  useEffect(() => {
+    // show movie modal
+    //setShowModal(true)
+    // get movie via id
+    getMovieDetails(movieId)
+  }, [movieId])
+
   // main app
   return (
     <div className="container-fluid movie-app">
+      <MovieDetails
+        showModal={showModal}
+        setShowModal={setShowModal}
+        movie={movie}
+        setMovie={setMovie}
+      />
       <div className="row d-flex align-items-center mt-4 mb-4">
         <div className="row">
           <Header listValue={listValue} setListValue={setListValue} />
@@ -164,7 +175,7 @@ const App = () => {
         <MovieListHeading heading={headingTitle} />
       </div>
       <div className="row">
-        <MovieList movies={movies} />
+        <MovieList movies={movies} setMovieId={setMovieId} />
       </div>
     </div>
   )
